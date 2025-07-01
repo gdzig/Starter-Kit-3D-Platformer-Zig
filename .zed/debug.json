@@ -1,0 +1,10 @@
+[
+  {
+    "label": "Debug",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "program": "godot",
+    "args": ["--path", "project"],
+    "build": "Build"
+  }
+]

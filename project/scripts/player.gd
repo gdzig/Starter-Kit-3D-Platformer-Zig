@@ -27,8 +27,8 @@ var coins = 0
 
 # Functions
 
-func _physics_process(delta):
 
+func _physics_process(delta):
 	# Handle functions
 
 	handle_controls(delta)
@@ -70,10 +70,11 @@ func _physics_process(delta):
 
 	previously_floored = is_on_floor()
 
+
 # Handle animation(s)
 
-func handle_effects(delta):
 
+func handle_effects(delta):
 	particles_trail.emitting = false
 	sound_footsteps.stream_paused = true
 
@@ -96,10 +97,11 @@ func handle_effects(delta):
 	elif animation.current_animation != "jump":
 		animation.play("jump", 0.1)
 
+
 # Handle movement input
 
-func handle_controls(delta):
 
+func handle_controls(delta):
 	# Movement
 
 	var input := Vector3.ZERO
@@ -117,25 +119,25 @@ func handle_controls(delta):
 	# Jumping
 
 	if Input.is_action_just_pressed("jump"):
-
 		if jump_single or jump_double:
 			jump()
 
+
 # Handle gravity
 
-func handle_gravity(delta):
 
+func handle_gravity(delta):
 	gravity += 25 * delta
 
 	if gravity > 0 and is_on_floor():
-
 		jump_single = true
 		gravity = 0
 
+
 # Jumping
 
-func jump():
 
+func jump():
 	Audio.play("res://sounds/jump.ogg")
 
 	gravity = -jump_strength
@@ -143,15 +145,16 @@ func jump():
 	model.scale = Vector3(0.5, 1.5, 0.5)
 
 	if jump_single:
-		jump_single = false;
-		jump_double = true;
+		jump_single = false
+		jump_double = true
 	else:
-		jump_double = false;
+		jump_double = false
+
 
 # Collecting coins
 
-func collect_coin():
 
+func collect_coin():
 	coins += 1
 
 	coin_collected.emit(coins)

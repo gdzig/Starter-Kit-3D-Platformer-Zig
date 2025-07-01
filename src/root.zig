@@ -1,8 +1,11 @@
 var gpa = GPA.init;
+var audio: *AudioGlobal = undefined;
 
 pub export fn my_extension_init(p_get_proc_address: godot.c.GDExtensionInterfaceGetProcAddress, p_library: godot.c.GDExtensionClassLibraryPtr, r_initialization: [*c]godot.c.GDExtensionInitialization) godot.c.GDExtensionBool {
     const allocator = gpa.allocator();
-    return godot.registerPlugin(p_get_proc_address, p_library, r_initialization, allocator, &init, &deinit);
+    const plugin = godot.registerPlugin(p_get_proc_address, p_library, r_initialization, allocator, &init, &deinit);
+
+    return plugin;
 }
 
 fn init(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
@@ -10,7 +13,7 @@ fn init(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
         return;
     }
 
-    godot.registerClass(Audio);
+    godot.registerClass(AudioGlobal);
 }
 
 fn deinit(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
@@ -20,7 +23,7 @@ fn deinit(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void 
 }
 
 const GPA = std.heap.GeneralPurposeAllocator(.{});
-const Audio = @import("Audio.zig");
+const AudioGlobal = @import("AudioGlobal.zig");
 
 const std = @import("std");
 const godot = @import("gdzig");

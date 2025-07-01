@@ -1,4 +1,4 @@
-<p align="center"><img src="icon.png"/></p>
+<p align="center"><img src="project/icon.png"/></p>
 
 # Starter Kit 3D Platformer
 
@@ -13,7 +13,7 @@ This package includes a basic template for a 3D platformer game in Godot 4.3 (st
 
 ### Screenshot
 
-<p align="center"><img src="screenshots/screenshot.png"/></p>
+<p align="center"><img src="project/screenshots/screenshot.png"/></p>
 
 ### License
 

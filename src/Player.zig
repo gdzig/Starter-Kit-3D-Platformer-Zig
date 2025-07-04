@@ -9,7 +9,7 @@ view: Node3D,
 movement_speed: f32,
 jump_strength: f32,
 movement_velocity: Vector3,
-rotation_direction: f32,
+rotation_direction: f64,
 gravity: f32,
 previously_floored: bool,
 jump_single: bool,
@@ -60,9 +60,41 @@ pub fn _physicsProcess(self: *Self, delta: f32) void {
     self.handleEffects(delta);
 
     // movement
-    const applied_velocity: Vector3 = .init();
-    _ = applied_velocity; // autofix
+    var applied_velocity: Vector3 = self.base.getVelocity()
+        .lerp(self.movement_velocity, delta * 10);
+    applied_velocity.y -= self.gravity;
 
+    self.base.setVelocity(applied_velocity);
+    _ = self.base.moveAndSlide();
+
+    // rotation
+    const velocity = self.base.getVelocity();
+    const direction: Vector2 = .initXY(velocity.z, velocity.x);
+    if (direction.length() > 0) {
+        self.rotation_direction = direction.angle();
+    }
+
+    var rotation = self.base.getRotation();
+    rotation.y = @floatCast(math.lerpAngle(@floatCast(rotation.y), self.rotation_direction, delta * 10));
+
+    // falling/respawning
+    if (self.base.getPosition().y < -10) {
+        _ = self.base.getTree().?.reloadCurrentScene();
+    }
+
+    // animation for scale (jumping and landing)
+    var model_scale = self.model.getScale();
+    model_scale = model_scale.lerp(.one, delta * 10);
+
+    self.model.setScale(model_scale);
+
+    // animation when landing
+    if (self.base.isOnFloor() and self.gravity > 2 and !self.previously_floored) {
+        self.model.setScale(.initXYZ(1.25, 0.75, 1.25));
+        // Audio.play("res://sounds/land.ogg")
+    }
+
+    self.previously_floored = self.base.isOnFloor();
 }
 
 fn handleControls(self: *Self, delta: f32) void {
@@ -106,6 +138,7 @@ const Input = godot.class.Input;
 const Engine = godot.class.Engine;
 const String = godot.builtin.String;
 const StringName = godot.builtin.StringName;
+const Vector2 = godot.builtin.Vector2;
 const Vector3 = godot.builtin.Vector3;
 const Node3D = godot.class.Node3D;
 const NodePath = godot.builtin.NodePath;
@@ -116,3 +149,4 @@ const AnimationPlayer = godot.class.AnimationPlayer;
 
 const std = @import("std");
 const godot = @import("gdzig");
+const math = godot.math;

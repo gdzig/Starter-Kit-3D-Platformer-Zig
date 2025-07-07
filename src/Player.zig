@@ -61,7 +61,7 @@ pub fn _physicsProcess(self: *Self, delta: f64) void {
 
     // movement
     var applied_velocity: Vector3 = self.base.getVelocity()
-        .lerp(self.movement_velocity, delta * 10);
+        .lerp(self.movement_velocity, @floatCast(delta * 10));
     applied_velocity.y = @floatCast(-self.gravity);
     self.base.setVelocity(applied_velocity);
 
@@ -75,7 +75,7 @@ pub fn _physicsProcess(self: *Self, delta: f64) void {
     }
 
     var rotation = self.base.getRotation();
-    rotation.y = @floatCast(math.lerpAngle(@floatCast(rotation.y), self.rotation_direction, delta * 10));
+    rotation.y = @floatCast(math.lerpAngle(@floatCast(rotation.y), @floatCast(self.rotation_direction), @floatCast(delta * 10)));
     self.base.setRotation(rotation);
 
     // falling/respawning
@@ -85,7 +85,7 @@ pub fn _physicsProcess(self: *Self, delta: f64) void {
 
     // animation for scale (jumping and landing)
     var model_scale = self.model.getScale();
-    model_scale = model_scale.lerp(.one, delta * 10);
+    model_scale = model_scale.lerp(.one, @floatCast(delta * 10));
 
     self.model.setScale(model_scale);
 
@@ -100,8 +100,8 @@ pub fn _physicsProcess(self: *Self, delta: f64) void {
 
 fn handleControls(self: *Self, delta: f64) void {
     var input: Vector3 = .zero;
-    input.x = Input.getAxis(.fromLatin1("move_left"), .fromLatin1("move_right"));
-    input.z = Input.getAxis(.fromLatin1("move_forward"), .fromLatin1("move_back"));
+    input.x = @floatCast(Input.getAxis(.fromLatin1("move_left"), .fromLatin1("move_right")));
+    input.z = @floatCast(Input.getAxis(.fromLatin1("move_forward"), .fromLatin1("move_back")));
 
     std.debug.print("{d} {d} {} {}\n", .{
         Input.getActionStrength(.fromLatin1("move_left"), .{}),
@@ -121,7 +121,7 @@ fn handleControls(self: *Self, delta: f64) void {
         input = input.normalized();
     }
 
-    self.movement_velocity = input.mulFloat(self.movement_speed * delta);
+    self.movement_velocity = input.mulFloat(@floatCast(self.movement_speed * delta));
 
     // jumping
     if (Input.isActionJustPressed(.fromLatin1("jump"), .{})) {

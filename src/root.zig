@@ -14,6 +14,11 @@ fn init(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
 
     // godot.registerClass(AudioGlobal);
     godot.registerClass(Player);
+    godot.registerClass(View);
+    godot.registerClass(HUD);
+    godot.registerClass(Cloud);
+    godot.registerClass(Coin);
+    godot.registerClass(PlatformFalling);
 }
 
 fn deinit(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
@@ -28,6 +33,9 @@ const AudioGlobal = @import("AudioGlobal.zig");
 const Player = @import("Player.zig");
 const View = @import("View.zig");
 const HUD = @import("HUD.zig");
+const Cloud = @import("objects/Cloud.zig");
+const Coin = @import("objects/Coin.zig");
+const PlatformFalling = @import("objects/PlatformFalling.zig");
 
 const std = @import("std");
 const godot = @import("gdzig");

@@ -2,16 +2,19 @@ const Self = @This();
 
 base: *Node,
 num_players: u32 = 12,
-bus: StringName = undefined,
-available: ArrayList(*AudioStreamPlayer) = undefined,
-queue: ArrayList(String) = undefined,
+bus: StringName,
+available: ArrayList(*AudioStreamPlayer) = .empty,
+queue: ArrayList(String) = .empty,
+
+pub fn init(base: *Node) Self {
+    return .{
+        .base = base,
+        .bus = .fromComptimeLatin1("master"),
+    };
+}
 
 pub fn _ready(self: *Self) void {
     if (Engine.isEditorHint()) return;
-
-    self.bus = .fromComptimeLatin1("master");
-    self.available = .empty;
-    self.queue = .empty;
 
     for (0..self.num_players) |_| {
         var player = AudioStreamPlayer.init();

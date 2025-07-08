@@ -12,7 +12,7 @@ fn init(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
         return;
     }
 
-    // godot.registerClass(AudioGlobal);
+    godot.registerClass(AudioAutoload);
     godot.registerClass(Player);
     godot.registerClass(View);
     godot.registerClass(HUD);
@@ -29,7 +29,7 @@ fn deinit(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void 
 
 const GPA = std.heap.GeneralPurposeAllocator(.{});
 
-const AudioGlobal = @import("AudioGlobal.zig");
+const AudioAutoload = @import("autoload/AudioAutoload.zig");
 const Player = @import("Player.zig");
 const View = @import("View.zig");
 const HUD = @import("HUD.zig");

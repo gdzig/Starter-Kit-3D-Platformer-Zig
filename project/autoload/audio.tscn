@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://culuimp0g3xb3"]
+
+[node name="Audio" type="AudioAutoload"]

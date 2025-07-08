@@ -18,6 +18,7 @@ particles_trail: *CPUParticles3D = undefined,
 sound_footsteps: *AudioStreamPlayer = undefined,
 model: *Node3D = undefined,
 animation: *AnimationPlayer = undefined,
+audio: *Audio = undefined,
 
 pub fn init(base: *CharacterBody3D) Self {
     return .{
@@ -49,6 +50,11 @@ pub fn _ready(self: *Self) void {
     self.view = Node3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("../View"))).?,
     ) catch std.debug.panic("Failed to find View", .{});
+
+    self.audio = godot.meta.downcast(
+        Audio,
+        self.base.getNode(.fromString(.fromLatin1("/root/Audio"))).?,
+    ) catch std.debug.panic("Failed to find Audio", .{});
 }
 
 pub fn _physicsProcess(self: *Self, delta: f64) void {
@@ -103,17 +109,6 @@ fn handleControls(self: *Self, delta: f64) void {
     input.x = @floatCast(Input.getAxis(.fromLatin1("move_left"), .fromLatin1("move_right")));
     input.z = @floatCast(Input.getAxis(.fromLatin1("move_forward"), .fromLatin1("move_back")));
 
-    std.debug.print("{d} {d} {} {}\n", .{
-        Input.getActionStrength(.fromLatin1("move_left"), .{}),
-        Input.getActionStrength(.fromLatin1("move_right"), .{}),
-        Input.isActionPressed(.fromLatin1("move_left"), .{}),
-        Input.isActionPressed(.fromLatin1("move_right"), .{}),
-    });
-
-    if (!input.isZeroApprox()) {
-        std.debug.print("Input is not zero: {}\n", .{input});
-    }
-
     const rotation = self.view.getRotation();
     input = input.rotated(.up, rotation.y);
 
@@ -133,6 +128,8 @@ fn handleControls(self: *Self, delta: f64) void {
 
 fn jump(self: *Self) void {
     // Audio.play("res://sounds/jump.ogg")
+    // TODO: this doesn't work
+    self.audio.play(.fromLatin1("res://sounds/jump.ogg"));
 
     self.gravity = -self.jump_strength;
     self.model.setScale(.initXYZ(0.5, 1.5, 0.5));
@@ -209,11 +206,14 @@ const Vector2 = godot.builtin.Vector2;
 const Vector3 = godot.builtin.Vector3;
 const Signal = godot.builtin.Signal;
 const Node3D = godot.class.Node3D;
+const Node = godot.class.Node;
 const NodePath = godot.builtin.NodePath;
 const CPUParticles3D = godot.class.CPUParticles3D;
 const CharacterBody3D = godot.class.CharacterBody3D;
 const AudioStreamPlayer = godot.class.AudioStreamPlayer;
 const AnimationPlayer = godot.class.AnimationPlayer;
+const Variant = godot.builtin.Variant;
+const Audio = @import("autoload/AudioAutoload.zig");
 
 const std = @import("std");
 const godot = @import("gdzig");

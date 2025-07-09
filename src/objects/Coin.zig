@@ -13,11 +13,11 @@ pub fn _ready(self: *Self) void {
     // onready
     self.mesh = Node3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Mesh"))).?,
-    ) catch std.debug.panic("Failed to find Mesh", .{});
+    ) orelse std.debug.panic("Failed to find Mesh", .{});
 
     self.particles = CPUParticles3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Particles"))).?,
-    ) catch std.debug.panic("Failed to find Particles", .{});
+    ) orelse std.debug.panic("Failed to find Particles", .{});
 
     // godot.connect(self.base, "body_entered", self, "_onBodyEntered");
 }
@@ -57,6 +57,9 @@ pub fn _onBodyEntered(self: *Self, body: *Node3D) void {
     }
 }
 
+const std = @import("std");
+
+const godot = @import("gdzig");
 const Engine = godot.class.Engine;
 const Node3D = godot.class.Node3D;
 const Area3D = godot.class.Area3D;
@@ -64,6 +67,3 @@ const CPUParticles3D = godot.class.CPUParticles3D;
 const Vector3 = godot.builtin.Vector3;
 const String = godot.builtin.String;
 const StringName = godot.builtin.StringName;
-
-const std = @import("std");
-const godot = @import("gdzig");

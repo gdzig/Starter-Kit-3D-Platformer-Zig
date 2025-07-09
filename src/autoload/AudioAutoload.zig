@@ -21,7 +21,14 @@ pub fn _ready(self: *Self) void {
         player.setVolumeDb(-10);
         player.setBus(self.bus);
 
-        godot.connect(player, "finished", self, "onStreamFinished");
+        var callable = godot.builtin.Callable.initObjectMethod(
+            @ptrCast(godot.meta.asObject(self)),
+            .fromComptimeLatin1("_onStreamFinished"),
+        );
+        var args: godot.builtin.Array = .init();
+        args.append(.init(player));
+        _ = player.connect(.fromComptimeLatin1("finished"), callable.bindv(args), .{});
+
         self.base.addChild(Node.upcast(player), .{});
         self.available.append(godot.heap.general_allocator, player) catch @panic("Failed to append AudioStreamPlayer to list");
     }
@@ -29,10 +36,6 @@ pub fn _ready(self: *Self) void {
 
 pub fn _process(self: *Self, delta: f64) void {
     _ = delta;
-
-    if (self.queue.items.len > 0) {
-        std.debug.print("Processing audio queue: {d}\n", .{self.queue.items.len});
-    }
 
     if (self.queue.items.len > 0 and self.available.items.len > 0) {
         var player = self.available.swapRemove(0);
@@ -43,14 +46,12 @@ pub fn _process(self: *Self, delta: f64) void {
     }
 }
 
-pub fn onStreamFinished(self: *Self, stream: *godot.class.Object) void {
-    const player = AudioStreamPlayer.downcast(stream).?;
+pub fn _onStreamFinished(self: *Self, player: *AudioStreamPlayer) void {
     self.available.append(godot.heap.general_allocator, player) catch @panic("Failed to append AudioStreamPlayer to available list");
 }
 
 pub fn play(self: *Self, sound_path: String) void {
     self.queue.append(godot.heap.general_allocator, sound_path) catch unreachable;
-    std.debug.print("Playing sound {} {d}\n", .{ Variant.init(sound_path), self.queue.items.len });
 }
 
 pub fn _exitTree(self: *Self) void {
@@ -61,6 +62,7 @@ pub fn _exitTree(self: *Self) void {
 
 pub fn _bindMethods() void {
     godot.registerMethod(Self, "play");
+    godot.registerMethod(Self, "_onStreamFinished");
 }
 
 const Node = godot.class.Node;

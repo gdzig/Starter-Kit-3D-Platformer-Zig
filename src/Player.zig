@@ -198,6 +198,10 @@ pub fn collectCoin(self: *Self) void {
     self.coin_collected.emit(self.coins);
 }
 
+const std = @import("std");
+
+const godot = @import("gdzig");
+const math = godot.math;
 const Input = godot.class.Input;
 const Engine = godot.class.Engine;
 const String = godot.builtin.String;
@@ -213,8 +217,5 @@ const CharacterBody3D = godot.class.CharacterBody3D;
 const AudioStreamPlayer = godot.class.AudioStreamPlayer;
 const AnimationPlayer = godot.class.AnimationPlayer;
 const Variant = godot.builtin.Variant;
-const Audio = @import("autoload/AudioAutoload.zig");
 
-const std = @import("std");
-const godot = @import("gdzig");
-const math = godot.math;
+const Audio = @import("autoload/AudioAutoload.zig");

@@ -19,7 +19,7 @@ pub fn _ready(self: *Self) void {
     self.random_velocity = rng.?.float(f64) * 1.9 + 0.1; // range 0.1 to 2.0
     self.random_time = rng.?.float(f64) * 1.9 + 0.1; // range 0.1 to 2.0
 
-    self.target = Node3D.downcast(self.base.getParent().?) catch @panic("Failed to downcast parent to Node3D");
+    self.target = Node3D.downcast(self.base.getParent().?) orelse @panic("Failed to downcast parent to Node3D");
 }
 
 pub fn _process(self: *Self, delta: f64) void {
@@ -32,10 +32,10 @@ pub fn _process(self: *Self, delta: f64) void {
     self.time += delta;
 }
 
+const std = @import("std");
+
+const godot = @import("gdzig");
 const Node = godot.class.Node;
 const Node3D = godot.class.Node3D;
 const Engine = godot.class.Engine;
 const Vector3 = godot.builtin.Vector3;
-
-const std = @import("std");
-const godot = @import("gdzig");

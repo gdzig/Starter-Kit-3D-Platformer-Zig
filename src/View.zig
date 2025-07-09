@@ -17,12 +17,12 @@ pub fn _ready(self: *Self) void {
     // onready
     self.camera = Camera3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Camera"))).?,
-    ) catch std.debug.panic("Failed to find Camera", .{});
+    ).?;
 
     // TODO: exported variable
     self.target = Node3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("../Player"))).?,
-    ) catch std.debug.panic("Failed to find Player", .{});
+    ).?;
 
     // Initial rotation
     self.camera_rotation = self.base.getRotationDegrees();

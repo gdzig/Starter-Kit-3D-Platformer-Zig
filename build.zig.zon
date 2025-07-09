@@ -37,8 +37,8 @@
     // internet connectivity.
     .dependencies = .{
         .gdzig = .{
-            .url = "git+https://github.com/gdzig/gdzig.git#c8c1f641c0f6b0ab3c976ce6a6c814d9a883ddb5",
-            .hash = "godot-0.0.0-dev-q0GYjn_rpwCoItbEDHwxqFatTtbJO_a7qPUV6S11ctJB",
+            .url = "git+https://github.com/gdzig/gdzig.git#20c06c66f89c7426c62ae01f3cca6b939da630d6",
+            .hash = "godot-0.0.0-dev-q0GYjrb_pwAJF_kssusEUhHAIT7Uip9iBteLpeljcwv5",
         },
     },
     .paths = .{

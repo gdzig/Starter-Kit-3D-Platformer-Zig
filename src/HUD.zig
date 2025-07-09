@@ -10,12 +10,12 @@ pub fn _ready(self: *Self) void {
     // onready
     self.coins_label = Label.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Coins"))).?,
-    ) catch std.debug.panic("Failed to find Coins label", .{});
+    ).?;
 
     // TODO: exported property
     self.player = Node3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("../Player"))).?,
-    ) catch std.debug.panic("Failed to find Player", .{});
+    ).?;
 
     // TODO: connect to player coin_collected signal
 }

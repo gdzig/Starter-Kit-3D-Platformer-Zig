@@ -1,14 +1,14 @@
-var gpa = GPA.init;
+var gpa: std.heap.DebugAllocator(.{}) = .init;
 
-pub export fn my_extension_init(p_get_proc_address: godot.c.GDExtensionInterfaceGetProcAddress, p_library: godot.c.GDExtensionClassLibraryPtr, r_initialization: [*c]godot.c.GDExtensionInitialization) godot.c.GDExtensionBool {
-    const allocator = gpa.allocator();
-    const plugin = godot.registerPlugin(p_get_proc_address, p_library, r_initialization, allocator, &init, &deinit);
-
-    return plugin;
+comptime {
+    godot.entrypoint("my_extension_init", .{
+        .init = &init,
+        .deinit = &deinit,
+    });
 }
 
-fn init(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
-    if (p_level != godot.c.GDEXTENSION_INITIALIZATION_SCENE) {
+fn init(level: godot.InitializationLevel) void {
+    if (level != .scene) {
         return;
     }
 
@@ -21,13 +21,11 @@ fn init(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
     godot.registerClass(PlatformFalling);
 }
 
-fn deinit(_: ?*anyopaque, p_level: godot.c.GDExtensionInitializationLevel) void {
-    if (p_level == godot.c.GDEXTENSION_INITIALIZATION_CORE) {
+fn deinit(level: godot.InitializationLevel) void {
+    if (level == .core) {
         _ = gpa.deinit();
     }
 }
-
-const GPA = std.heap.GeneralPurposeAllocator(.{});
 
 const AudioAutoload = @import("autoload/AudioAutoload.zig");
 const Player = @import("Player.zig");

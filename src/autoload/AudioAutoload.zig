@@ -36,7 +36,7 @@ pub fn _process(self: *Self, delta: f64) void {
 
     if (self.queue.items.len > 0 and self.available.items.len > 0) {
         var player = self.available.swapRemove(0);
-        const stream = AudioStream.downcast(ResourceLoader.load(self.queue.swapRemove(0), .{}).?) catch @panic("Failed to load AudioStream");
+        const stream = AudioStream.downcast(ResourceLoader.load(self.queue.swapRemove(0), .{}).?).?;
         player.setStream(stream);
         player.setPitchScale(@floatCast(godot.random.randfRange(0.9, 1.1)));
         player.play(.{});
@@ -44,7 +44,7 @@ pub fn _process(self: *Self, delta: f64) void {
 }
 
 pub fn onStreamFinished(self: *Self, stream: *godot.class.Object) void {
-    const player = AudioStreamPlayer.downcast(stream) catch @panic("Failed to downcast AudioStreamPlayer");
+    const player = AudioStreamPlayer.downcast(stream).?;
     self.available.append(godot.heap.general_allocator, player) catch @panic("Failed to append AudioStreamPlayer to available list");
 }
 

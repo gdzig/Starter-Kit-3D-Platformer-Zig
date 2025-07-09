@@ -33,28 +33,28 @@ pub fn _ready(self: *Self) void {
     // onready
     self.particles_trail = CPUParticles3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("./ParticlesTrail"))).?,
-    ) catch std.debug.panic("Failed to find ParticlesTrail", .{});
+    ).?;
 
     self.sound_footsteps = AudioStreamPlayer.downcast(
         self.base.getNode(.fromString(.fromLatin1("./SoundFootsteps"))).?,
-    ) catch std.debug.panic("Failed to find SoundFootsteps", .{});
+    ).?;
 
     self.model = Node3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Character"))).?,
-    ) catch std.debug.panic("Failed to find Character", .{});
+    ).?;
 
     self.animation = AnimationPlayer.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Character/AnimationPlayer"))).?,
-    ) catch std.debug.panic("Failed to find AnimationPlayer", .{});
+    ).?;
 
     self.view = Node3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("../View"))).?,
-    ) catch std.debug.panic("Failed to find View", .{});
+    ).?;
 
     self.audio = godot.meta.downcast(
-        Audio,
+        *Audio,
         self.base.getNode(.fromString(.fromLatin1("/root/Audio"))).?,
-    ) catch std.debug.panic("Failed to find Audio", .{});
+    ).?;
 }
 
 pub fn _physicsProcess(self: *Self, delta: f64) void {

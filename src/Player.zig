@@ -13,7 +13,7 @@ gravity: f64 = 0,
 previously_floored: bool = false,
 jump_single: bool = true,
 jump_double: bool = true,
-coins: u32 = 0,
+coins: i64 = 0,
 
 view: *Node3D = undefined,
 particles_trail: *CPUParticles3D = undefined,
@@ -24,6 +24,7 @@ audio: *Audio = undefined,
 
 pub fn _bindMethods() void {
     godot.registerSignal(Self, CoinCollectedSignal);
+    godot.registerMethod(Self, "collectCoin");
 }
 
 pub fn _ready(self: *Self) void {
@@ -50,10 +51,7 @@ pub fn _ready(self: *Self) void {
         self.base.getNode(.fromString(.fromLatin1("../View"))).?,
     ).?;
 
-    self.audio = godot.object.downcast(
-        *Audio,
-        self.base.getNode(.fromString(.fromLatin1("/root/Audio"))).?,
-    ).?;
+    self.audio = Audio.getAutoload(self.base.getTree());
 }
 
 pub fn _physicsProcess(self: *Self, delta: f64) void {
@@ -126,8 +124,6 @@ fn handleControls(self: *Self, delta: f64) void {
 }
 
 fn jump(self: *Self) void {
-    // Audio.play("res://sounds/jump.ogg")
-    // TODO: this doesn't work
     self.audio.play(.fromLatin1("res://sounds/jump.ogg"));
 
     self.gravity = -self.jump_strength;
@@ -194,7 +190,7 @@ fn handleEffects(self: *Self, delta: f64) void {
 
 pub fn collectCoin(self: *Self) void {
     self.coins += 1;
-    self.coin_collected.emit(self.coins);
+    _ = self.base.emitSignal(godot.signalName(CoinCollectedSignal), .{self.coins});
 }
 
 const std = @import("std");

@@ -7,26 +7,34 @@ grabbed: bool = false,
 mesh: *Node3D = undefined,
 particles: *CPUParticles3D = undefined,
 
+audio: *Audio = undefined,
+
+pub fn _bindMethods() void {
+    godot.registerMethod(Self, "_onBodyEntered");
+}
+
 pub fn _ready(self: *Self) void {
     if (Engine.isEditorHint()) return;
 
     // onready
     self.mesh = Node3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Mesh"))).?,
-    ) orelse std.debug.panic("Failed to find Mesh", .{});
+    ).?;
 
     self.particles = CPUParticles3D.downcast(
         self.base.getNode(.fromString(.fromLatin1("./Particles"))).?,
-    ) orelse std.debug.panic("Failed to find Particles", .{});
+    ).?;
 
-    // godot.connect(self.base, "body_entered", self, "_onBodyEntered");
+    self.audio = Audio.getAutoload(self.base.getTree());
+
+    godot.connect(self.base, Area3D.BodyEnteredSignal, .fromClosure(self, &_onBodyEntered));
 }
 
 pub fn _process(self: *Self, delta: f64) void {
     if (Engine.isEditorHint()) return;
 
     // Rotation
-    self.base.rotateY(@floatCast(2 * delta));
+    self.base.rotateY(2 * delta);
 
     // Sine movement
     var position = self.base.getPosition();
@@ -37,15 +45,13 @@ pub fn _process(self: *Self, delta: f64) void {
 }
 
 pub fn _onBodyEntered(self: *Self, body: *Node3D) void {
-    _ = body;
     if (self.grabbed) return;
 
     // Check if body has collect_coin method (assume it's a Player)
-    // if (body.hasMethod(.fromLatin1("collectCoin"))) {
-    if (true) {
-        // body.call(.fromLatin1("collectCoin"), &.{});
+    if (body.hasMethod(.fromComptimeLatin1("collectCoin"))) {
+        _ = body.call(.fromComptimeLatin1("collectCoin"), &.{});
 
-        // Audio.play("res://sounds/coin.ogg") - TODO: implement audio
+        self.audio.play(.fromLatin1("res://sounds/coin.ogg"));
 
         // Make invisible
         self.mesh.queueFree();
@@ -67,3 +73,5 @@ const CPUParticles3D = godot.class.CPUParticles3D;
 const Vector3 = godot.builtin.Vector3;
 const String = godot.builtin.String;
 const StringName = godot.builtin.StringName;
+
+const Audio = @import("../autoload/AudioAutoload.zig");

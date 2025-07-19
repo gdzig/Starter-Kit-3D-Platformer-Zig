@@ -4,7 +4,16 @@
     "adapter": "CodeLLDB",
     "request": "launch",
     "program": "godot",
-    "args": ["--path", "project"],
-    "build": "Build"
+    "build": "Build",
+    "cwd": "${ZED_WORKTREE_ROOT}/project"
+  },
+  {
+    "label": "Debug Editor",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "program": "godot",
+    "args": ["--editor"],
+    "build": "Build",
+    "cwd": "${ZED_WORKTREE_ROOT}/project"
   }
 ]

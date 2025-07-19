@@ -6,6 +6,13 @@ bus: StringName,
 available: ArrayList(*AudioStreamPlayer) = .empty,
 queue: ArrayList(String) = .empty,
 
+pub fn getAutoload(tree: ?*SceneTree) *Self {
+    return godot.object.downcast(
+        *Self,
+        tree.?.getRoot().?.getNode(.fromString(.fromLatin1("/root/Audio"))).?,
+    ).?;
+}
+
 pub fn init(base: *Node) Self {
     return .{
         .base = base,
@@ -38,6 +45,8 @@ pub fn _ready(self: *Self) void {
 }
 
 pub fn _process(self: *Self, delta: f64) void {
+    if (Engine.isEditorHint()) return;
+
     _ = delta;
 
     if (self.queue.items.len > 0 and self.available.items.len > 0) {
@@ -76,6 +85,7 @@ const Callable = godot.builtin.Callable;
 const Engine = godot.class.Engine;
 const Node = godot.class.Node;
 const ResourceLoader = godot.class.ResourceLoader;
+const SceneTree = godot.class.SceneTree;
 const String = godot.builtin.String;
 const StringName = godot.builtin.StringName;
 const Variant = godot.builtin.Variant;

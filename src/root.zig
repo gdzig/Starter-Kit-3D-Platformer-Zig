@@ -1,5 +1,3 @@
-var gpa: std.heap.DebugAllocator(.{}) = .init;
-
 comptime {
     godot.entrypoint("my_extension_init", .{
         .init = &init,
@@ -22,9 +20,7 @@ fn init(level: godot.InitializationLevel) void {
 }
 
 fn deinit(level: godot.InitializationLevel) void {
-    if (level == .core) {
-        _ = gpa.deinit();
-    }
+    _ = level;
 }
 
 const AudioAutoload = @import("autoload/AudioAutoload.zig");

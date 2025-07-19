@@ -52,15 +52,15 @@ fn handleInput(self: *Self, delta: f64) void {
     // Rotation
     var input: Vector3 = .zero;
 
-    input.y = @floatCast(Input.getAxis(.fromLatin1("camera_left"), .fromLatin1("camera_right")));
-    input.x = @floatCast(Input.getAxis(.fromLatin1("camera_up"), .fromLatin1("camera_down")));
+    input.y = @floatCast(Input.getAxis(.fromComptimeLatin1("camera_left"), .fromComptimeLatin1("camera_right")));
+    input.x = @floatCast(Input.getAxis(.fromComptimeLatin1("camera_up"), .fromComptimeLatin1("camera_down")));
 
     const limited_input = if (input.length() > 1.0) input.normalized() else input;
     self.camera_rotation = self.camera_rotation.add(limited_input.mulFloat(@floatCast(self.rotation_speed * delta)));
     self.camera_rotation.x = std.math.clamp(self.camera_rotation.x, -80, -10);
 
     // Zooming
-    self.zoom += @as(f64, @floatCast(Input.getAxis(.fromLatin1("zoom_in"), .fromLatin1("zoom_out")))) * self.zoom_speed * delta;
+    self.zoom += @as(f64, @floatCast(Input.getAxis(.fromComptimeLatin1("zoom_in"), .fromComptimeLatin1("zoom_out")))) * self.zoom_speed * delta;
     self.zoom = std.math.clamp(self.zoom, self.zoom_maximum, self.zoom_minimum);
 }
 

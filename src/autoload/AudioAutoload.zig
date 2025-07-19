@@ -21,13 +21,16 @@ pub fn _ready(self: *Self) void {
         player.setVolumeDb(-10);
         player.setBus(self.bus);
 
-        var callable = godot.builtin.Callable.initObjectMethod(
-            @ptrCast(godot.meta.asObject(self)),
-            .fromComptimeLatin1("_onStreamFinished"),
-        );
         var args: godot.builtin.Array = .init();
         args.append(.init(player));
-        _ = player.connect(.fromComptimeLatin1("finished"), callable.bindv(args), .{});
+
+        var callable = Callable.fromClosure(self, &_onStreamFinished);
+        defer callable.deinit();
+
+        var bound_callable = callable.bindv(args);
+        defer bound_callable.deinit();
+
+        godot.connect(player, AudioStreamPlayer.FinishedSignal, bound_callable);
 
         self.base.addChild(Node.upcast(player), .{});
         self.available.append(godot.heap.general_allocator, player) catch @panic("Failed to append AudioStreamPlayer to list");
@@ -65,15 +68,16 @@ pub fn _bindMethods() void {
     godot.registerMethod(Self, "_onStreamFinished");
 }
 
-const Node = godot.class.Node;
-const String = godot.builtin.String;
-const StringName = godot.builtin.StringName;
+const godot = @import("gdzig");
 const ArrayList = std.ArrayListUnmanaged;
 const AudioStream = godot.class.AudioStream;
 const AudioStreamPlayer = godot.class.AudioStreamPlayer;
-const ResourceLoader = godot.class.ResourceLoader;
+const Callable = godot.builtin.Callable;
 const Engine = godot.class.Engine;
+const Node = godot.class.Node;
+const ResourceLoader = godot.class.ResourceLoader;
+const String = godot.builtin.String;
+const StringName = godot.builtin.StringName;
 const Variant = godot.builtin.Variant;
 
 const std = @import("std");
-const godot = @import("gdzig");

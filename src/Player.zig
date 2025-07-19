@@ -1,6 +1,8 @@
 const Self = @This();
 
-coin_collected: Signal,
+pub const CoinCollectedSignal = struct {
+    num_coins: i64,
+};
 
 base: *CharacterBody3D,
 movement_speed: f64 = 250.0,
@@ -20,11 +22,8 @@ model: *Node3D = undefined,
 animation: *AnimationPlayer = undefined,
 audio: *Audio = undefined,
 
-pub fn init(base: *CharacterBody3D) Self {
-    return .{
-        .base = base,
-        .coin_collected = .init(),
-    };
+pub fn _bindMethods() void {
+    godot.registerSignal(Self, CoinCollectedSignal);
 }
 
 pub fn _ready(self: *Self) void {
@@ -51,7 +50,7 @@ pub fn _ready(self: *Self) void {
         self.base.getNode(.fromString(.fromLatin1("../View"))).?,
     ).?;
 
-    self.audio = godot.meta.downcast(
+    self.audio = godot.object.downcast(
         *Audio,
         self.base.getNode(.fromString(.fromLatin1("/root/Audio"))).?,
     ).?;
@@ -106,8 +105,8 @@ pub fn _physicsProcess(self: *Self, delta: f64) void {
 
 fn handleControls(self: *Self, delta: f64) void {
     var input: Vector3 = .zero;
-    input.x = @floatCast(Input.getAxis(.fromLatin1("move_left"), .fromLatin1("move_right")));
-    input.z = @floatCast(Input.getAxis(.fromLatin1("move_forward"), .fromLatin1("move_back")));
+    input.x = @floatCast(Input.getAxis(.fromComptimeLatin1("move_left"), .fromComptimeLatin1("move_right")));
+    input.z = @floatCast(Input.getAxis(.fromComptimeLatin1("move_forward"), .fromComptimeLatin1("move_back")));
 
     const rotation = self.view.getRotation();
     input = input.rotated(.up, rotation.y);
@@ -119,7 +118,7 @@ fn handleControls(self: *Self, delta: f64) void {
     self.movement_velocity = input.mulFloat(@floatCast(self.movement_speed * delta));
 
     // jumping
-    if (Input.isActionJustPressed(.fromLatin1("jump"), .{})) {
+    if (Input.isActionJustPressed(.fromComptimeLatin1("jump"), .{})) {
         if (self.jump_single or self.jump_double) {
             self.jump();
         }
@@ -166,7 +165,7 @@ fn handleEffects(self: *Self, delta: f64) void {
         if (speed_factor > 0.05) {
             if (!current_animation.eql(.fromLatin1("walk"))) {
                 self.animation.play(.{
-                    .name = .fromLatin1("walk"),
+                    .name = .fromComptimeLatin1("walk"),
                     .custom_speed = 0.1,
                 });
             }
@@ -181,13 +180,13 @@ fn handleEffects(self: *Self, delta: f64) void {
             }
         } else if (!current_animation.eql(.fromLatin1("idle"))) {
             self.animation.play(.{
-                .name = .fromLatin1("idle"),
+                .name = .fromComptimeLatin1("idle"),
                 .custom_speed = 0.1,
             });
         }
     } else if (!current_animation.eql(.fromLatin1("jump"))) {
         self.animation.play(.{
-            .name = .fromLatin1("jump"),
+            .name = .fromComptimeLatin1("jump"),
             .custom_speed = 0.1,
         });
     }

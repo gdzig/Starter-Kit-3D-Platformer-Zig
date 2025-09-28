@@ -18,11 +18,15 @@ pub fn build(b: *std.Build) void {
         .precision = @as([]const u8, "float"),
     });
 
-    const lib = b.addSharedLibrary(.{
+    const lib = b.addLibrary(.{
+        .linkage = .dynamic,
         .name = "example",
-        .root_source_file = b.path("src/root.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/root.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+        .use_llvm = true,
     });
     lib.root_module.addImport("gdzig", gdzig_dep.module("gdzig"));
 

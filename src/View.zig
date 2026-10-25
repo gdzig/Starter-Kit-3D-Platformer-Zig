@@ -64,16 +64,15 @@ fn handleInput(self: *Self, delta: f64) void {
     self.zoom = std.math.clamp(self.zoom, self.zoom_maximum, self.zoom_minimum);
 }
 
+const std = @import("std");
+
+const godot = @import("gdzig");
 const Input = godot.class.Input;
 const Engine = godot.class.Engine;
 const String = godot.builtin.String;
 const StringName = godot.builtin.StringName;
 const Vector3 = godot.builtin.Vector3;
-
 const Node3D = godot.class.Node3D;
 const Camera3D = godot.class.Camera3D;
 const NodePath = godot.builtin.NodePath;
-
-const std = @import("std");
-const godot = @import("gdzig");
 const math = godot.math;

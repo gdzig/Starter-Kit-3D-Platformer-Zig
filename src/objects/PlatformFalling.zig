@@ -5,7 +5,7 @@ falling: bool = false,
 gravity: f64 = 0.0,
 
 area_3d: ?*Area3D = null,
-audio: *Audio = undefined,
+audio: *AudioAutoload = undefined,
 
 pub fn _bindMethods() void {
     godot.registerMethod(Self, "_onBodyEntered");
@@ -15,7 +15,7 @@ pub fn _ready(self: *Self) void {
     if (Engine.isEditorHint()) return;
 
     self.area_3d = Area3D.downcast(self.base.getNodeOrNull(.fromString(.fromLatin1("./Area3D"))));
-    self.audio = Audio.getAutoload(self.base.getTree());
+    self.audio = AudioAutoload.getAutoload(self.base.getTree());
 
     if (self.area_3d) |area| {
         godot.connect(area, Area3D.BodyEnteredSignal, .fromClosure(self, &_onBodyEntered));
@@ -68,4 +68,4 @@ const Engine = godot.class.Engine;
 const Node3D = godot.class.Node3D;
 const Vector3 = godot.builtin.Vector3;
 
-const Audio = @import("../autoload/AudioAutoload.zig");
+const AudioAutoload = @import("../autoload/AudioAutoload.zig");

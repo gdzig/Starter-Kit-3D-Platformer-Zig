@@ -23,13 +23,20 @@ fn deinit(level: godot.InitializationLevel) void {
     _ = level;
 }
 
+const std = @import("std");
+
+const godot = @import("gdzig");
+
 const AudioAutoload = @import("autoload/AudioAutoload.zig");
-const Player = @import("Player.zig");
-const View = @import("View.zig");
+
 const HUD = @import("HUD.zig");
+
 const Cloud = @import("objects/Cloud.zig");
+
 const Coin = @import("objects/Coin.zig");
+
 const PlatformFalling = @import("objects/PlatformFalling.zig");
 
-const std = @import("std");
-const godot = @import("gdzig");
+const Player = @import("Player.zig");
+
+const View = @import("View.zig");

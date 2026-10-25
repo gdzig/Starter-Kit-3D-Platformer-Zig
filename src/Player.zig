@@ -20,7 +20,7 @@ particles_trail: *CPUParticles3D = undefined,
 sound_footsteps: *AudioStreamPlayer = undefined,
 model: *Node3D = undefined,
 animation: *AnimationPlayer = undefined,
-audio: *Audio = undefined,
+audio: *AudioAutoload = undefined,
 
 pub fn _bindMethods() void {
     godot.registerSignal(Self, CoinCollectedSignal);
@@ -51,7 +51,7 @@ pub fn _ready(self: *Self) void {
         self.base.getNode(.fromString(.fromLatin1("../View"))).?,
     ).?;
 
-    self.audio = Audio.getAutoload(self.base.getTree());
+    self.audio = AudioAutoload.getAutoload(self.base.getTree());
 }
 
 pub fn _physicsProcess(self: *Self, delta: f64) void {
@@ -213,4 +213,4 @@ const AudioStreamPlayer = godot.class.AudioStreamPlayer;
 const AnimationPlayer = godot.class.AnimationPlayer;
 const Variant = godot.builtin.Variant;
 
-const Audio = @import("autoload/AudioAutoload.zig");
+const AudioAutoload = @import("autoload/AudioAutoload.zig");

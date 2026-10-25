@@ -77,8 +77,10 @@ pub fn _bindMethods() void {
     godot.registerMethod(Self, "_onStreamFinished");
 }
 
-const godot = @import("gdzig");
+const std = @import("std");
 const ArrayList = std.ArrayListUnmanaged;
+
+const godot = @import("gdzig");
 const AudioStream = godot.class.AudioStream;
 const AudioStreamPlayer = godot.class.AudioStreamPlayer;
 const Callable = godot.builtin.Callable;
@@ -89,5 +91,3 @@ const SceneTree = godot.class.SceneTree;
 const String = godot.builtin.String;
 const StringName = godot.builtin.StringName;
 const Variant = godot.builtin.Variant;
-
-const std = @import("std");

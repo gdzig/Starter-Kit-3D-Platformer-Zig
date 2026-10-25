@@ -35,7 +35,7 @@ pub fn _onCoinCollected(self: *Self, coins: i64) void {
     self.coins_label.setText(coins_text);
 }
 
-const Player = @import("./Player.zig");
+const std = @import("std");
 
 const godot = @import("gdzig");
 const Engine = godot.class.Engine;
@@ -44,4 +44,4 @@ const Label = godot.class.Label;
 const CanvasLayer = godot.class.CanvasLayer;
 const Node3D = godot.class.Node3D;
 
-const std = @import("std");
+const Player = @import("./Player.zig");

@@ -1,5 +1,3 @@
-const std = @import("std");
-
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
 // runner.
@@ -51,3 +49,5 @@ pub fn build(b: *std.Build) void {
     const run_step = b.step("run", "Run with Godot");
     run_step.dependOn(&run_cmd.step);
 }
+
+const std = @import("std");

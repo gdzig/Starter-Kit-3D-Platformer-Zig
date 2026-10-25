@@ -1,4 +1,9 @@
 [tools]
 "aqua:godotengine/godot" = "latest"
+"github:gdzig/gdzig-zlint" = "0.6.1"
 zig = "0.15.1"
 zls = "0.15.0"
+
+[tasks.lint]
+description = "Run gdzig-zlint with the repository rules"
+run = "gdzig-zlint ."

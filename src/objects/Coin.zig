@@ -7,7 +7,7 @@ grabbed: bool = false,
 mesh: *Node3D = undefined,
 particles: *CPUParticles3D = undefined,
 
-audio: *Audio = undefined,
+audio: *AudioAutoload = undefined,
 
 pub fn _bindMethods() void {
     godot.registerMethod(Self, "_onBodyEntered");
@@ -25,7 +25,7 @@ pub fn _ready(self: *Self) void {
         self.base.getNode(.fromString(.fromLatin1("./Particles"))).?,
     ).?;
 
-    self.audio = Audio.getAutoload(self.base.getTree());
+    self.audio = AudioAutoload.getAutoload(self.base.getTree());
 
     godot.connect(self.base, Area3D.BodyEnteredSignal, .fromClosure(self, &_onBodyEntered));
 }
@@ -74,4 +74,4 @@ const Vector3 = godot.builtin.Vector3;
 const String = godot.builtin.String;
 const StringName = godot.builtin.StringName;
 
-const Audio = @import("../autoload/AudioAutoload.zig");
+const AudioAutoload = @import("../autoload/AudioAutoload.zig");
